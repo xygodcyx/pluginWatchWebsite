@@ -15,6 +15,11 @@
             --table-hover: #e3f2fd;
         }
 
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
         html {
             font-size: 16px;
         }
@@ -110,13 +115,17 @@
                     <th @click="sortByName">名字</th>
                     <th @click="sortByDailyInstalls">日安装量</th>
                     <th @click="sortByTotalInstalls">总安装量</th>
+                    <th @click="sortByUpdatedDate">最近更新时间</th>
+                    <th @click="sortByScore">评分</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="(script,key) in scripts" :key="key">
-                    <td>{{script.name}}</td>
+                    <td><a :href="script.url" target="_blank">{{script.name}}</a></td>
                     <td>{{script.dailyInstalls}}</td>
                     <td>{{script.totalInstalls}}</td>
+                    <td>{{script.updatedDate}}</td>
+                    <td>{{script.score}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -162,9 +171,15 @@
             sortByTotalInstalls() {
                 this._sort("totalInstalls")
             },
-            _sort(name) {
+            sortByUpdatedDate() {
+                this._sort("updatedDate", (v) => new Date(v).getTime())
+            },
+            sortByScore() {
+                this._sort("score")
+            },
+            _sort(name, parse = (val) => val) {
                 this.scripts.sort((a, b) => {
-                    return (this.sortState[name] ? a : b)[name] - (this.sortState[name] ? b : a)[name] >= 0 ? 1 : -1
+                    return parse((this.sortState[name] ? a : b)[name]) - parse((this.sortState[name] ? b : a)[name]) >= 0 ? 1 : -1
                 })
                 this.sortState[name] = !this.sortState[name]
             }
