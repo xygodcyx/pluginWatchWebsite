@@ -46,12 +46,39 @@
             font-size: 2rem;
         }
 
+        .big-title {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flash-icon {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+        .flash-icon.active {
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(-360deg);
+            }
+        }
+
         .table-container {
             overflow-x: auto;
             margin-bottom: 1rem;
             box-shadow: 0 0.125rem 0.9375rem rgba(0, 0, 0, 0.1);
             border-radius: 0.5rem;
         }
+
 
         .scripts {
             width: 100%;
@@ -106,8 +133,11 @@
 </head>
 <body>
 <div class="container">
-    <h1>我的油猴脚本</h1>
     <div id="app">
+        <div class="big-title">
+            <h1>我的油猴脚本</h1>
+            <img src="flash.png" alt="" :class="['flash-icon',{ active:flashing }]" @click="handleFlash">
+        </div>
         <div class="table-container">
             <table class="scripts">
                 <thead>
@@ -142,7 +172,8 @@
                     name: false,
                     dailyInstalls: false,
                     totalInstalls: false,
-                }
+                },
+                flashing: false
             }
         },
         async created() {
@@ -161,6 +192,13 @@
                             resolve(res)
                         })
                     })
+                })
+            },
+            handleFlash() {
+                this.flashing = true
+                this.getScripts().then(res => {
+                    this.scripts = res
+                    this.flashing = false
                 })
             },
             sortByName() {
