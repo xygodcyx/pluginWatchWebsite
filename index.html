@@ -145,9 +145,10 @@
                 }
             }
         },
-        async mounted() {
+        async created() {
             const res = await this.getScripts()
             this.scripts = res
+            this.sortByScore()
             console.log(res)
         },
         methods: {
@@ -166,18 +167,18 @@
                 this._sort("name")
             },
             sortByDailyInstalls() {
-                this._sort("dailyInstalls")
+                this._sort("dailyInstalls", (v) => +v)
             },
             sortByTotalInstalls() {
-                this._sort("totalInstalls")
+                this._sort("totalInstalls", (v) => +v)
             },
             sortByUpdatedDate() {
                 this._sort("updatedDate", (v) => new Date(v).getTime())
             },
             sortByScore() {
-                this._sort("score")
+                this._sort("score", (v) => +v)
             },
-            _sort(name, parse = (val) => val) {
+            _sort(name, parse = (v) => v) {
                 this.scripts.sort((a, b) => {
                     return parse((this.sortState[name] ? a : b)[name]) - parse((this.sortState[name] ? b : a)[name]) >= 0 ? 1 : -1
                 })
