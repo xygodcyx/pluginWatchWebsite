@@ -173,7 +173,7 @@
                 </thead>
                 <tbody v-if="scripts.length > 0">
                 <tr v-for="(script,key) in scripts" :key="key">
-                    <td><a :href="script.url" target="_blank">{{script.name}}</a></td>
+                    <td><a :href="script.url">{{script.name}}</a></td>
                     <td>{{script.dailyInstalls}}</td>
                     <td>{{script.totalInstalls}}</td>
                     <td>{{script.updatedDate}}</td>
