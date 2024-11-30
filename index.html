@@ -207,18 +207,21 @@
                 flashing: false
             }
         },
-        async created() {
-            const res = await this.getScripts()
-            this.scripts = res
-            this.sortByScore()
-            console.log(res)
+        created() {
+            this.getScripts().then(res => {
+                this.scripts = res
+                this.sortByTotalInstalls()
+            })
         },
         computed: {},
         methods: {
             getScripts() {
+                let id = null
                 return new Promise((resolve, reject) => {
                     NProgress.start()
-                    NProgress.inc()
+                    id = setInterval(function () {
+                        NProgress.inc()
+                    }, Math.random() * 200 + 200)
                     fetch("https://scripts-server.quhou.top/", {
                         method: "get"
                     }).then(res => {
@@ -235,7 +238,8 @@
                             "dailyInstalls": "99999",
                             "totalInstalls": "999999"
                         }])
-                    }).finally(() => {
+                    }).finally(function () {
+                        clearInterval(id)
                         NProgress.done()
                     })
                 })
