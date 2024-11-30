@@ -10,7 +10,7 @@
 
     <!-- 社交媒体分享优化 -->
     <meta property="og:title" content="xygod屈侯提供的精选油猴脚本合集">
-	<meta property="og:site_name" content="xygod屈侯提供的精选油猴脚本合集">
+    <meta property="og:site_name" content="xygod屈侯提供的精选油猴脚本合集">
     <meta property="og:description" content="xygod屈侯的多款实用油猴脚本：B站增强、自动翻译、B站IP显示等！">
     <meta property="og:image" content="https://scripts.quhou.top/favicon.png">
     <meta property="og:url" content="https://scripts.quhou.top/">
@@ -25,7 +25,9 @@
     <meta name="google-site-verification" content="2lRLViFSbm0wBdJSeUIbSscy0x2t2W-ZoCZeGEh_7OI"/>
     <title>xygod的油猴脚本</title>
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link href="https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.css" rel="stylesheet">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/nprogress/0.2.0/nprogress.js"></script>
     <style>
         :root {
             --primary-color: #3f72af;
@@ -106,7 +108,6 @@
             border-collapse: separate;
             border-spacing: 0;
             background-color: var(--table-bg);
-            overflow: hidden;
         }
 
         .scripts thead {
@@ -216,12 +217,26 @@
         methods: {
             getScripts() {
                 return new Promise((resolve, reject) => {
+                    NProgress.start()
+                    NProgress.inc()
                     fetch("https://scripts-server.quhou.top/", {
                         method: "get"
                     }).then(res => {
                         res.json().then(res => {
                             resolve(res)
                         })
+                    }).catch(err => {
+                        console.log(err)
+                        resolve([{
+                            "name": err.message,
+                            "url": "出现错误",
+                            "updatedDate": "错误",
+                            "score": "999",
+                            "dailyInstalls": "99999",
+                            "totalInstalls": "999999"
+                        }])
+                    }).finally(() => {
+                        NProgress.done()
                     })
                 })
             },
@@ -231,6 +246,7 @@
                 this.getScripts().then(res => {
                     this.scripts = res
                     this.flashing = false
+
                 })
             },
             sortByName() {
